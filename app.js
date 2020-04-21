@@ -12,16 +12,19 @@ let questions = [
     id: 0,
     question: "What is the square root of 4?",
     claimed: false,
+    active: true,
   },
   {
     id: 1,
     question: "Why does this app exist?",
     claimed: false,
+    active: false,
   },
   {
     id: 2,
     question: "How large is the expanding universe?",
     claimed: false,
+    active: false,
   },
 ];
 
@@ -37,6 +40,20 @@ io.on("connection", (socket) => {
       }
     }
   });
+  socket.on("move", action => {
+    for (let i = 0; i < questions.length; i++) {
+      if (questions[i].active) {
+        questions[i].active = false;
+        if (action === "back") {
+          questions[i-1].active = true;
+        } else if (action === "next") {
+          questions[i+1].active = true;
+        }
+        io.sockets.emit("questionUpdate", questions);
+        break;
+      }
+    }
+  })
   socket.on("disconnect", () => {
     console.log("Client disconnected");
   });
