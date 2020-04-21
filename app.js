@@ -30,9 +30,9 @@ io.on("connection", (socket) => {
   socket.emit("questionUpdate", questions);
   socket.on("questionClaim", (claimedID) => {
     for (let i = 0; i < questions.length; i++) {
-      if (questions[i].id === claimedID) {
-        questions[i].claimed = "aaaa";
-        socket.emit("questionUpdate", questions);
+      if (questions[i].id === claimedID.id) {
+        questions[i].claimed = claimedID.name;
+        io.sockets.emit("questionUpdate", questions);
         break;
       }
     }
